@@ -1,7 +1,7 @@
 
 const offset = 0.9 
 
-function initScrolling (className) {
+function initScrolling () {
 
   window.addEventListener("scroll", () => {
 
