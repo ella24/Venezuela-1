@@ -1,35 +1,51 @@
-// To use scrollytelling, we need to install this package here:
-//    https://github.com/russellgoldenberg/enter-view
-// Parcel might do it for you, or you can just use
-//    npm install enter-view
 
-import enterView from 'enter-view'
-import * as d3 from 'd3'
+const offset = 0.9 
 
-// If this module changes, refresh the ENTIRE page
-if (module.hot) {
-  module.hot.accept(() => window.location.reload())
+function initScrolling (className) {
+
+  window.addEventListener("scroll", () => {
+
+    //Get all the scroll containers, can be more than one
+    const containerSteps = document.querySelectorAll('.scroll-section')
+    
+    Array.from(containerSteps).forEach((container) => {
+      
+      //get all the steps into a container
+      const steps = container.querySelectorAll(".step")
+    
+      Array.from(steps).forEach((step) => {
+        const start = step.offsetTop - (window.innerHeight * offset)
+        const end = step.offsetTop + step.offsetHeight  - (window.innerHeight * offset)
+      
+        if((end >= scrollY) && (start <= scrollY)) {
+          changeScene(step)
+        } else {
+          removeScene(step)
+        }
+      })
+
+    })
+  })
+
 }
 
-enterView({
-  selector: '.step',
-  offset: 0.4,
-  enter: function(element) {
-    element.classList.add('entered')
-
-    // Trigger stepin for current step
-    d3.select(element).dispatch('stepin')
-  },
-  exit: function(element) {
-    element.classList.remove('entered')
-
-    // Trigger stepout for current step
-    d3.select(element).dispatch('stepout')
-
-    // Trigger stepin for previous step (if it exists)
-    var previous = element.previousElementSibling
-    if (previous && previous.classList.contains('step')) {
-      d3.select(previous).dispatch('stepin')
-    }
+function removeScene(step) {
+  const scene = step.dataset.scroll
+  if(document.getElementById(scene)) {
+    //The ID for the stiky element should match the data-scroll value from the step
+    const sceneElement = document.getElementById(scene)
+    sceneElement.classList.remove("entered")
   }
-})
+}
+
+function changeScene(step) {
+  const scene = step.dataset.scroll
+  if(document.getElementById(scene)) {
+    //The ID for the stiky element should match the data-scroll value from the step
+    const sceneElement = document.getElementById(scene)
+    sceneElement.classList.add("entered")
+  }
+}
+
+//init scroll gallery
+initScrolling()
