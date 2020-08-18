@@ -9,6 +9,10 @@ margin-left: 50%;
 transform: translateX(-50%);
 }
 
+div.c {
+  text-align: justify;
+}
+
 .title_holder {
 position: relative;
 text-align: center;
